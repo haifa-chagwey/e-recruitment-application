@@ -152,6 +152,12 @@ public class JobPostActivityController {
                 }
             }
         }
+        if (usersService.getCurrentUserProfile() instanceof RecruiterProfile) {
+            System.out.println("Here " + ((RecruiterProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+        }
+        if (usersService.getCurrentUserProfile() instanceof JobSeekerProfile) {
+            System.out.println("Here " + ((JobSeekerProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+        }
         model.addAttribute("user", currentUserProfile);
         return "dashboard";
     }

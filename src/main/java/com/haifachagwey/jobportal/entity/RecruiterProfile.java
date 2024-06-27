@@ -123,6 +123,6 @@ public class RecruiterProfile {
 //  We are not persisting this data in DB
     public String getPhotosImagePath(){
         if (profilePhoto == null) return null;
-        return "/photos/recruiter/" + userAccountId + "/" + profilePhoto;
+        return "photos/recruiter/" + this.userAccountId + "/" + this.profilePhoto;
     }
 }

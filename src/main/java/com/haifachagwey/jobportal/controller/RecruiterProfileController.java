@@ -36,7 +36,7 @@ public class RecruiterProfileController {
         this.recruiterProfileService = recruiterProfileService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String getRecruiterProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
@@ -75,8 +75,6 @@ public class RecruiterProfileController {
             return "redirect:/dashboard";
 
         }
-
-
         return null;
     }
 }

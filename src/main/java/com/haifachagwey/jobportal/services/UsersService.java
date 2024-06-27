@@ -6,6 +6,8 @@ import com.haifachagwey.jobportal.entity.Users;
 import com.haifachagwey.jobportal.repository.JobSeekerProfileRepository;
 import com.haifachagwey.jobportal.repository.RecruiterProfileRepository;
 import com.haifachagwey.jobportal.repository.UsersRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,7 @@ public class UsersService {
     private final JobSeekerProfileRepository jobSeekerProfileRepository;
     private final RecruiterProfileRepository recruiterProfileRepository;
     private final PasswordEncoder passwordEncoder;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public UsersService(UsersRepository usersRepository, JobSeekerProfileRepository jobSeekerProfileRepository, RecruiterProfileRepository recruiterProfileRepository, PasswordEncoder passwordEncoder) {
@@ -56,6 +59,7 @@ public class UsersService {
             int userId = user.getUserId();
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))) {
                 RecruiterProfile recruiterProfile = recruiterProfileRepository.findById(userId).orElse(new RecruiterProfile());
+                LOGGER.info("recruiterProfile.getProfilePhoto()" + recruiterProfile.getProfilePhoto());
                 return recruiterProfile;
             } else {
                 JobSeekerProfile jobSeekerProfile = jobSeekerProfileRepository.findById(userId).orElse(new JobSeekerProfile());
