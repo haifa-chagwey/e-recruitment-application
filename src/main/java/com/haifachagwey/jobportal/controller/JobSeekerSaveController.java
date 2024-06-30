@@ -38,9 +38,8 @@ public class JobSeekerSaveController {
         this.jobSeekerSaveService = jobSeekerSaveService;
     }
 
-    @PostMapping("job-details/save/{id}")
+    @PostMapping("/{id}/save")
     public String save(@PathVariable("id") int id, JobSeekerSave jobSeekerSave) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
@@ -60,18 +59,14 @@ public class JobSeekerSaveController {
 
     @GetMapping("/saved-jobs")
     public String savedJobs(Model model) {
-
         List<JobPostActivity> jobPost = new ArrayList<>();
         Object currentUserProfile = usersService.getCurrentUserProfile();
-
         List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob((JobSeekerProfile) currentUserProfile);
         for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
             jobPost.add(jobSeekerSave.getJob());
         }
-
         model.addAttribute("jobPost", jobPost);
         model.addAttribute("user", currentUserProfile);
-
         return "saved-jobs";
     }
 

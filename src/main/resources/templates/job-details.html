@@ -42,37 +42,31 @@
 
     <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav m-auto mt-2 mt-lg-0">
-
             <li class="nav-item active">
-                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}"
-                ><i class="fas fa-search"></i>Search for Jobs</a
-                >
+                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}">
+                    <i class="fas fa-search"></i> Search for Jobs </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/saved-jobs}">
-                    <i class="fa-solid fa-eye"></i>View Saved Jobs</a>
+                    <i class="fa-solid fa-eye"></i> View Saved Jobs </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/job-seeker-profile}">
-                    <i class="fa-solid fa-pencil"></i>Edit Profile</a>
+                    <i class="fa-solid fa-pencil"></i> Edit Profile </a>
             </li>
 
             <li class="nav-item ">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/add}"
-                ><i class="fa-solid fa-file-circle-plus"></i>Post New Job</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/new}">
+                    <i class="fa-solid fa-file-circle-plus"></i> Post New Job </a>
             </li>
             <li class="nav-item active">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard}"
-                > <i class="fa-solid fa-eye"></i>View Your Jobs</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard}">
+                    <i class="fa-solid fa-eye"></i> View Your Jobs </a>
             </li>
             <li class="nav-item ">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/recruiter-profile}"
-                > <i class="fa-solid fa-pencil"></i>Edit Account</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/recruiter-profile}">
+                    <i class="fa-solid fa-pencil"></i> Edit Account </a>
             </li>
-
         </ul>
 
         <img
@@ -169,7 +163,7 @@
             <div class="mt-3 px-3" sec:authorize="hasAuthority('Job Seeker')">
                 <div class="row">
                     <div class="col-md-3">
-                        <form th:action="@{/job-details/apply/{id}(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
+                        <form th:action="@{/{id}/apply(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
                               method="post">
                             <button class="btn-sec btn-red w-100" type="submit" th:if="${alreadyApplied == false}">Apply
                                 Now
@@ -180,7 +174,7 @@
                         </form>
                     </div>
                     <div class="col-md-3">
-                        <form th:action="@{/job-details/save/{id}(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
+                        <form th:action="@{/{id}/save(id=${jobDetails.jobPostId})}" th:object="${applyJob}"
                               method="post">
                             <button class="btn-sec btn-black w-100" type="submit" th:if="${alreadySaved == false}">Save
                                 Job
@@ -196,7 +190,7 @@
             <div class="mt-3 px-3" sec:authorize="hasAuthority('Recruiter')">
                 <div class="row">
                     <div class="col-md-3">
-                        <form th:action="@{/dashboard/edit/{id}(id=${jobDetails.jobPostId})}" method="post">
+                        <form th:action="@{/dashboard/{id}/edit(id=${jobDetails.jobPostId})}" method="post">
                             <button class="btn-sec btn-red w-100" type="submit">Edit Job</button>
                         </form>
                     </div>

@@ -34,7 +34,7 @@ public class RecruiterProfileService {
 
     public RecruiterProfile getCurrentRecruiterProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             Users user = usersRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             Optional<RecruiterProfile> recruiterProfile = this.getRecruiterProfileById(user.getUserId());

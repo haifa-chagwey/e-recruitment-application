@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
-
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,10 +35,11 @@ public class RecruiterProfileController {
         this.recruiterProfileService = recruiterProfileService;
     }
 
-    @GetMapping("")
+    //    http://localhost:8080/recruiter-profile (Get)
+    @GetMapping
     public String getRecruiterProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUsername = authentication.getName();
             Users users = usersRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("Could not found user"));
             Optional<RecruiterProfile> recruiterProfile = recruiterProfileService.getRecruiterProfileById(users.getUserId());
@@ -50,7 +50,8 @@ public class RecruiterProfileController {
         return "recruiter-profile";
     }
 
-    @PostMapping("/addNew")
+    //    http://localhost:8080/recruiter-profile (Post)
+    @PostMapping
     public String addRecruiterProfile(RecruiterProfile recruiterProfile, @RequestParam("image") MultipartFile multipartFile
                                     , Model model) {
         Authentication authentication = SecurityContextHolder .getContext().getAuthentication();
@@ -73,7 +74,6 @@ public class RecruiterProfileController {
                 ex.printStackTrace();
             }
             return "redirect:/dashboard";
-
         }
         return null;
     }

@@ -53,8 +53,6 @@ public class JobPostActivityController {
                              @RequestParam(value = "days7", required = false) boolean days7,
                              @RequestParam(value = "days30", required = false) boolean days30)
     {
-
-
         model.addAttribute("partTime", Objects.equals(partTime, "Part-Time"));
         model.addAttribute("fullTime", Objects.equals(partTime, "Full-Time"));
         model.addAttribute("freelance", Objects.equals(partTime, "Freelance"));
@@ -162,16 +160,19 @@ public class JobPostActivityController {
         return "dashboard";
     }
 
-    @GetMapping("/dashboard/add")
-    public String addJob(Model model){
+    //  Create a new job
+    @GetMapping("/dashboard/new")
+    public String addJob(Model model) {
         model.addAttribute("jobPostActivity", new JobPostActivity());
         model.addAttribute("user", usersService.getCurrentUserProfile());
         return "add-jobs";
     }
-    @PostMapping("dashboard/addNew")
-    public String addNewJob(JobPostActivity jobPostActivity, Model model){
+
+    //  Submit the new job
+    @PostMapping("/dashboard")
+    public String addNewJob(JobPostActivity jobPostActivity, Model model) {
         Users user = usersService.getCurrentUser();
-        if (user != null){
+        if (user != null) {
             jobPostActivity.setPostedById(user);
         }
         jobPostActivity.setPostedDate(new Date());
@@ -179,6 +180,16 @@ public class JobPostActivityController {
         JobPostActivity savedJobPostActivity = jobPostActivityService.addNewJobPostActivity(jobPostActivity);
         return "redirect:/dashboard";
     }
+
+    //  Edit a job
+    @PostMapping("dashboard/{id}/edit")
+    public String editJob(@PathVariable("id") int id, Model model) {
+        JobPostActivity jobPostActivity = jobPostActivityService.getJobPostActivityById(id);
+        model.addAttribute("jobPostActivity", jobPostActivity);
+        model.addAttribute("user", usersService.getCurrentUserProfile());
+        return "add-jobs";
+    }
+
     @GetMapping("global-search/")
     public String globalSearch(Model model,
                                @RequestParam(value = "job", required = false) String job,
@@ -248,13 +259,6 @@ public class JobPostActivityController {
 
         model.addAttribute("jobPost", jobPost);
         return "global-search";
-    }
-    @PostMapping("dashboard/edit/{id}")
-    public String editJob(@PathVariable("id") int id, Model model) {
-        JobPostActivity jobPostActivity = jobPostActivityService.getJobPostActivityById(id);
-        model.addAttribute("jobPostActivity", jobPostActivity);
-        model.addAttribute("user", usersService.getCurrentUserProfile());
-        return "add-jobs";
     }
 
 }

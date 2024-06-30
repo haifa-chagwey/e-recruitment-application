@@ -30,7 +30,7 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-//    Returns Register page
+//  Add new user
     @GetMapping("/register")
     public String register(Model model) {
         List<UsersType> usersTypeList = usersTypeService.getAll();
@@ -39,7 +39,7 @@ public class UsersController {
         return "register";
     }
 
-//  Action: Adds new user
+//  Submit the new user
     @PostMapping("/register/new")
     public String UserRegisteration(@Valid Users user) {
         usersService.addNewUser(user);
@@ -47,13 +47,13 @@ public class UsersController {
         return "redirect:/dashboard/";
     }
 
-//  Returns page:  Returns the login page
+//  Sign in to the application
     @GetMapping("/login")
     public String login(){
         return "login";
     }
 
-//    Action: log out from the application
+//  Sign out from the application
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

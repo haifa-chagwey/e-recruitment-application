@@ -39,27 +39,25 @@
 
     <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav m-auto mt-2 mt-lg-0">
-
-            <li class="nav-item ">
-                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}"
-                ><i class="fas fa-search"></i>Search for Jobs</a
-                >
+            <li class="nav-item">
+                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}">
+                    <i class="fas fa-search"></i> Search for Jobs </a>
             </li>
             <li class="nav-item active">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/saved-jobs}">
-                    <i class="fa-solid fa-eye"></i>View Saved Jobs</a>
+                    <i class="fa-solid fa-eye"></i> View Saved Jobs </a>
             </li>
-            <li class="nav-item ">
+            <li class="nav-item">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/job-seeker-profile}">
-                    <i class="fa-solid fa-pencil"></i>Edit Profile</a>
+                    <i class="fa-solid fa-pencil"></i> Edit Profile </a>
             </li>
         </ul>
         <img
-                class="rounded-circle me-3"
-                height="50px"
-                width="50x"
-                th:if="${user.photosImagePath!=null}"
-                th:src="@{${user?.photosImagePath}}"
+            class="rounded-circle me-3"
+            height="50px"
+            width="50x"
+            th:if="${user.photosImagePath!=null}"
+            th:src="@{${user?.photosImagePath}}"
         />
         <label th:if="${user.firstName != null && user.lastName != null}"
                th:text="${user.firstName+' '+user.lastName}"
@@ -86,9 +84,9 @@
         <div class="box mt-3">
             <label class="large-label px-3 mb-3">Results</label>
             <th:block th:each="jobPost:${jobPost}">
-                <a th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
+                <a th:href="@{/{id}(id=${jobPost.jobPostId})}"
                    style=" text-decoration:none; color:black;">
-                    <div onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostId})" class="job-row">
+                    <div onclick="window.location=/{id}(id=${jobPost.jobPostId})" class="job-row">
                         <div class="row ">
                             <div class="col-md-4">
                                 <label class="job-title text-left">
@@ -137,11 +135,11 @@
 
 <script>
 
-    $('#job').change(function() {
-      $('#hidJob').val($(this).val());
+    $('#job').change(function () {
+        $('#hidJob').val($(this).val());
     });
-    $('#loc').change(function() {
-      $('#hidLoc').val($(this).val());
+    $('#loc').change(function () {
+        $('#hidLoc').val($(this).val());
     });
 </script>
 </body>

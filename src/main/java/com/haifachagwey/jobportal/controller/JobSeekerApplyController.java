@@ -39,8 +39,8 @@ public class JobSeekerApplyController {
         this.jobSeekerProfileService = jobSeekerProfileService;
     }
 
-    //    Edit a job
-    @GetMapping("job-details-apply/{id}")
+    //    Display job details
+    @GetMapping("/{id}")
     public String editJob(@PathVariable("id") int id, Model model) {
         JobPostActivity jobDetails = jobPostActivityService.getJobPostActivityById(id);
         List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService.getJobCandidates(jobDetails);
@@ -88,7 +88,7 @@ public class JobSeekerApplyController {
         return "job-details";
     }
 
-    @PostMapping("job-details/apply/{id}")
+    @PostMapping("/{id}/apply")
     public String apply(@PathVariable("id") int id, JobSeekerApply jobSeekerApply) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {

@@ -39,37 +39,30 @@
 
     <div class="collapse navbar-collapse" id="navbarToggler">
         <ul class="navbar-nav m-auto mt-2 mt-lg-0">
-
             <li class="nav-item active">
-                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}"
-                ><i class="fas fa-search"></i>Search for Jobs</a
-                >
+                <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/dashboard}">
+                    <i class="fas fa-search"></i> Search for Jobs </a>
             </li>
             <li class="nav-item ">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/saved-jobs}">
-                    <i class="fa-solid fa-eye"></i>View Saved Jobs</a>
+                    <i class="fa-solid fa-eye"></i> View Saved Jobs </a>
             </li>
             <li class="nav-item ">
                 <a sec:authorize="hasAuthority('Job Seeker')" class="nav-link" th:href="@{/job-seeker-profile}">
-                    <i class="fa-solid fa-pencil"></i>Edit Profile</a>
+                    <i class="fa-solid fa-pencil"></i> Edit Profile </a>
             </li>
-
             <li class="nav-item ">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/add}"
-                ><i class="fa-solid fa-file-circle-plus"></i>Post New Job</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard/new}">
+                    <i class="fa-solid fa-file-circle-plus"></i> Post New Job </a>
             </li>
             <li class="nav-item active">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard}"
-                > <i class="fa-solid fa-eye"></i>View Your Jobs</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/dashboard}">
+                    <i class="fa-solid fa-eye"></i> View Your Jobs </a>
             </li>
             <li class="nav-item ">
-                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/recruiter-profile}"
-                > <i class="fa-solid fa-pencil"></i>Edit Account</a
-                >
+                <a sec:authorize="hasAuthority('Recruiter')" class="nav-link" th:href="@{/recruiter-profile}">
+                    <i class="fa-solid fa-pencil"></i> Edit Account </a>
             </li>
-
         </ul>
 
         <img
@@ -254,11 +247,11 @@
             <label class="large-label px-3 mb-3" sec:authorize="hasAuthority('Job Seeker')">Search Results</label>
             <th:block th:each="jobPost:${jobPost}">
                 <a
-                        th:href="@{/job-details-apply/{id}(id=${jobPost.jobPostId})}"
+                        th:href="@{/{id}(id=${jobPost.jobPostId})}"
                         style="text-decoration: none; color: black"
                 >
                     <div
-                            onclick="window.location=/job-details-apply/{id}(id=${jobPost.jobPostId})"
+                            onclick="window.location=/{id}(id=${jobPost.jobPostId})"
                             class="job-row"
                     >
                         <div class="row">
