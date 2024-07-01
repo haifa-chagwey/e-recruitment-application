@@ -35,7 +35,7 @@ public class RecruiterProfileController {
         this.recruiterProfileService = recruiterProfileService;
     }
 
-    //    http://localhost:8080/recruiter-profile (Get)
+    //  Get the recruiter profile
     @GetMapping
     public String getRecruiterProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -50,11 +50,11 @@ public class RecruiterProfileController {
         return "recruiter-profile";
     }
 
-    //    http://localhost:8080/recruiter-profile (Post)
+    //  Edit recruiter profile
     @PostMapping
     public String addRecruiterProfile(RecruiterProfile recruiterProfile, @RequestParam("image") MultipartFile multipartFile
                                     , Model model) {
-        Authentication authentication = SecurityContextHolder .getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
             String currentUsername = authentication.getName();
             Users user = usersRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("Could not found user"));

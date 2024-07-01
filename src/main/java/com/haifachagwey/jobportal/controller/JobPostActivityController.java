@@ -90,21 +90,18 @@ public class JobPostActivityController {
             freelance = "Freelance";
             remote = false;
         }
-
         if (officeOnly == null && remoteOnly == null && partialRemote == null) {
             officeOnly = "Office-Only";
             remoteOnly = "Remote-Only";
             partialRemote = "Partial-Remote";
             type = false;
         }
-
         if (!dateSearchFlag && !remote && !type && !StringUtils.hasText(job) && !StringUtils.hasText(location)) {
             jobPost = jobPostActivityService.getAll();
         } else {
             jobPost = jobPostActivityService.search(job, location, Arrays.asList(partTime, fullTime, freelance),
                     Arrays.asList(remoteOnly, officeOnly, partialRemote), searchDate);
         }
-
         Object currentUserProfile = usersService.getCurrentUserProfile();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
@@ -118,7 +115,6 @@ public class JobPostActivityController {
                 List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getCandidatesJob((JobSeekerProfile) currentUserProfile);
                 boolean exist;
                 boolean saved;
-
                 for (JobPostActivity jobActivity : jobPost) {
                     exist = false;
                     saved = false;
@@ -129,7 +125,6 @@ public class JobPostActivityController {
                             break;
                         }
                     }
-
                     for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
                         if (Objects.equals(jobActivity.getJobPostId(), jobSeekerSave.getJob().getJobPostId())) {
                             jobActivity.setSaved(true);
@@ -137,16 +132,13 @@ public class JobPostActivityController {
                             break;
                         }
                     }
-
                     if (!exist) {
                         jobActivity.setActive(false);
                     }
                     if (!saved) {
                         jobActivity.setSaved(false);
                     }
-
                     model.addAttribute("jobPost", jobPost);
-
                 }
             }
         }
@@ -219,7 +211,6 @@ public class JobPostActivityController {
         model.addAttribute("job", job);
         model.addAttribute("location", location);
 
-
         LocalDate searchDate = null;
         List<JobPostActivity> jobPost = null;
         boolean dateSearchFlag = true;
@@ -235,30 +226,25 @@ public class JobPostActivityController {
         } else {
             dateSearchFlag = false;
         }
-
         if (partTime == null && fullTime == null && freelance == null) {
             partTime = "Part-Time";
             fullTime = "Full-Time";
             freelance = "Freelance";
             remote = false;
         }
-
         if (officeOnly == null && remoteOnly == null && partialRemote == null) {
             officeOnly = "Office-Only";
             remoteOnly = "Remote-Only";
             partialRemote = "Partial-Remote";
             type = false;
         }
-
         if (!dateSearchFlag && !remote && !type && !StringUtils.hasText(job) && !StringUtils.hasText(location)) {
             jobPost = jobPostActivityService.getAll();
         } else {
             jobPost = jobPostActivityService.search(job, location, Arrays.asList(partTime, fullTime, freelance),
                     Arrays.asList(remoteOnly, officeOnly, partialRemote), searchDate);
         }
-
         model.addAttribute("jobPost", jobPost);
         return "global-search";
     }
-
 }

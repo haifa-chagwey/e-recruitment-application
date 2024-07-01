@@ -21,8 +21,9 @@ public class Users {
 
     private boolean isActive;
 
-    //    To fix this
+    //    To check this
     //    @DateTimeFormat(pattern = "DD-MM-YYYY")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date registrationDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
