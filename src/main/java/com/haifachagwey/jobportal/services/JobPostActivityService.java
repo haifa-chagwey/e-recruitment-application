@@ -20,8 +20,7 @@ public class JobPostActivityService {
         this.jobPostActivityRepository = jobPostActivityRepository;
     }
 
-
-    public JobPostActivity addNewJobPostActivity(JobPostActivity jobPostActivity){
+    public JobPostActivity addNewJobPostActivity(JobPostActivity jobPostActivity) {
         return jobPostActivityRepository.save(jobPostActivity);
     }
 

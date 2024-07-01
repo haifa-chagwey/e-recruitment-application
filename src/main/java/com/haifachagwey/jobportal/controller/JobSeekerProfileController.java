@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class JobSeekerProfileController {
 
     //  Get job seeker profile
     @GetMapping
-    public String JobSeekerProfile(Model model){
+    public String getJobSeekerProfile(Model model) {
         JobSeekerProfile jobSeekerProfile = new JobSeekerProfile();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<Skills> skills = new ArrayList<>();
@@ -66,10 +65,10 @@ public class JobSeekerProfileController {
 
     //  Edit job seeker profile
     @PostMapping
-    public String addJobSeekerProfile(JobSeekerProfile jobSeekerProfile, @RequestParam("image") MultipartFile image,
-        @RequestParam("pdf") MultipartFile pdf, Model model){
+    public String editJobSeekerProfile(JobSeekerProfile jobSeekerProfile, @RequestParam("image") MultipartFile image,
+                                       @RequestParam("pdf") MultipartFile pdf, Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!(authentication instanceof AnonymousAuthenticationToken)){
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
             Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             jobSeekerProfile.setUserId(user);
             jobSeekerProfile.setUserAccountId(user.getUserId());
@@ -77,7 +76,6 @@ public class JobSeekerProfileController {
         List<Skills> skillsList = new ArrayList<>();
         model.addAttribute("profile", jobSeekerProfile);
         model.addAttribute("skills", skillsList);
-
         for(Skills skills : jobSeekerProfile.getSkills()){
             skills.setJobSeekerProfile(jobSeekerProfile);
         }
@@ -106,13 +104,15 @@ public class JobSeekerProfileController {
         return "redirect:/dashboard";
     }
 
+    //  Get job seeker profile from job details
     @GetMapping("/{id}")
-    public String candidateProfile(@PathVariable("id") int id, Model model) {
+    public String getCandidateProfile(@PathVariable("id") int id, Model model) {
         Optional<JobSeekerProfile> seekerProfile = jobSeekerProfileService.getJobSeekerProfileById(id);
         model.addAttribute("profile", seekerProfile.get());
         return "job-seeker-profile";
     }
 
+    //  Download resume
     @GetMapping("/downloadResume")
     public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userID") String userId) {
         FileDownloadUtil downloadUtil = new FileDownloadUtil();
@@ -131,7 +131,6 @@ public class JobSeekerProfileController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, headerValue)
                 .body(resource);
-
     }
 
 }

@@ -1,10 +1,7 @@
 package com.haifachagwey.jobportal.controller;
 
 import com.haifachagwey.jobportal.entity.*;
-import com.haifachagwey.jobportal.services.JobPostActivityService;
-import com.haifachagwey.jobportal.services.JobSeekerApplyService;
-import com.haifachagwey.jobportal.services.JobSeekerSaveService;
-import com.haifachagwey.jobportal.services.UsersService;
+import com.haifachagwey.jobportal.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,13 +28,17 @@ public class JobPostActivityController {
     private final JobPostActivityService jobPostActivityService;
     private final JobSeekerApplyService jobSeekerApplyService;
     private final JobSeekerSaveService jobSeekerSaveService;
+    private final RecruiterProfileService recruiterProfileService;
+    private final JobSeekerProfileService jobSeekerProfileService;
 
     @Autowired
-    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService, JobSeekerApplyService jobSeekerApplyService, JobSeekerSaveService jobSeekerSaveService) {
+    public JobPostActivityController(UsersService usersService, JobPostActivityService jobPostActivityService, JobSeekerApplyService jobSeekerApplyService, JobSeekerSaveService jobSeekerSaveService, RecruiterProfileService recruiterProfileService, JobSeekerProfileService jobSeekerProfileService) {
         this.usersService = usersService;
         this.jobPostActivityService = jobPostActivityService;
         this.jobSeekerApplyService = jobSeekerApplyService;
         this.jobSeekerSaveService = jobSeekerSaveService;
+        this.recruiterProfileService = recruiterProfileService;
+        this.jobSeekerProfileService = jobSeekerProfileService;
     }
 
     @GetMapping("/dashboard")
@@ -142,12 +143,12 @@ public class JobPostActivityController {
                 }
             }
         }
-        if (usersService.getCurrentUserProfile() instanceof RecruiterProfile) {
-            System.out.println("Here " + ((RecruiterProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
-        }
-        if (usersService.getCurrentUserProfile() instanceof JobSeekerProfile) {
-            System.out.println("Here " + ((JobSeekerProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
-        }
+//        if (usersService.getCurrentUserProfile() instanceof RecruiterProfile) {
+//            System.out.println("Here " + ((RecruiterProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+//        }
+//        if (usersService.getCurrentUserProfile() instanceof JobSeekerProfile) {
+//            System.out.println("Here " + ((JobSeekerProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+//        }
         model.addAttribute("user", currentUserProfile);
         return "dashboard";
     }
@@ -171,6 +172,56 @@ public class JobPostActivityController {
         model.addAttribute("jobPostActivity", jobPostActivity);
         JobPostActivity savedJobPostActivity = jobPostActivityService.addNewJobPostActivity(jobPostActivity);
         return "redirect:/dashboard";
+    }
+
+
+    //    Display job details
+    @GetMapping("/{id}")
+    public String getJob(@PathVariable("id") int id, Model model) {
+        JobPostActivity jobDetails = jobPostActivityService.getJobPostActivityById(id);
+        List<JobSeekerApply> jobSeekerApplyList = jobSeekerApplyService.getJobCandidates(jobDetails);
+        List<JobSeekerSave> jobSeekerSaveList = jobSeekerSaveService.getJobCandidates(jobDetails);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("Recruiter"))) {
+                RecruiterProfile user = recruiterProfileService.getCurrentRecruiterProfile();
+                if (user != null) {
+                    model.addAttribute("applyList", jobSeekerApplyList);
+                }
+            } else {
+                JobSeekerProfile user = jobSeekerProfileService.getCurrentJobSeekerProfile();
+                if (user != null) {
+                    boolean exists = false;
+                    boolean saved = false;
+                    for (JobSeekerApply jobSeekerApply : jobSeekerApplyList) {
+                        if (jobSeekerApply.getUserId().getUserAccountId() == user.getUserAccountId()) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    for (JobSeekerSave jobSeekerSave : jobSeekerSaveList) {
+                        if (jobSeekerSave.getUserId().getUserAccountId() == user.getUserAccountId()) {
+                            saved = true;
+                            break;
+                        }
+                    }
+                    model.addAttribute("alreadyApplied", exists);
+                    model.addAttribute("alreadySaved", saved);
+                }
+            }
+        }
+        JobSeekerApply jobSeekerApply = new JobSeekerApply();
+        model.addAttribute("applyJob", jobSeekerApply);
+        model.addAttribute("jobDetails", jobDetails);
+        if (usersService.getCurrentUserProfile() instanceof RecruiterProfile) {
+            System.out.println("Here " + ((RecruiterProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+        }
+        if (usersService.getCurrentUserProfile() instanceof JobSeekerProfile) {
+            System.out.println("Here " + ((JobSeekerProfile) usersService.getCurrentUserProfile()).getPhotosImagePath());
+        }
+        Object currentUserProfile = usersService.getCurrentUserProfile();
+        model.addAttribute("user", currentUserProfile);
+        return "job-details";
     }
 
     //  Edit a job

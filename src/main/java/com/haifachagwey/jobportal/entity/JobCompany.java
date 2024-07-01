@@ -16,9 +16,7 @@ public class JobCompany {
 
     private String logo;
 
-    public JobCompany() {
-
-    }
+    public JobCompany() {}
 
     public JobCompany(Integer id, String name, String logo) {
         this.id = id;

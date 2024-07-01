@@ -52,7 +52,7 @@ public class RecruiterProfileController {
 
     //  Edit recruiter profile
     @PostMapping
-    public String addRecruiterProfile(RecruiterProfile recruiterProfile, @RequestParam("image") MultipartFile multipartFile
+    public String editRecruiterProfile(RecruiterProfile recruiterProfile, @RequestParam("image") MultipartFile multipartFile
                                     , Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){

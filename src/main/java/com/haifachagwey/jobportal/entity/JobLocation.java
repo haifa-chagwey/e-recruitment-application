@@ -62,7 +62,7 @@ public class JobLocation {
 
     @Override
     public String toString() {
-        return "JobLocation{" +
+        return "JobLocation {" +
                 "id=" + id +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
