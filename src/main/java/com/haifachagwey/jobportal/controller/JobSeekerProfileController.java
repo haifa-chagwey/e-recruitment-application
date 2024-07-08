@@ -76,7 +76,7 @@ public class JobSeekerProfileController {
         List<Skills> skillsList = new ArrayList<>();
         model.addAttribute("profile", jobSeekerProfile);
         model.addAttribute("skills", skillsList);
-        for(Skills skills : jobSeekerProfile.getSkills()){
+        for(Skills skills : jobSeekerProfile.getSkills()) {
             skills.setJobSeekerProfile(jobSeekerProfile);
         }
         String imageName = "";
