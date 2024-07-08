@@ -7,6 +7,7 @@ import com.haifachagwey.jobportal.repository.UsersRepository;
 import com.haifachagwey.jobportal.services.JobSeekerProfileService;
 import com.haifachagwey.jobportal.utils.FileDownloadUtil;
 import com.haifachagwey.jobportal.utils.FileUploadUtil;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+
 
 @Controller
 @RequestMapping("/job-seeker-profile")
@@ -34,6 +37,7 @@ public class JobSeekerProfileController {
 
     private JobSeekerProfileService jobSeekerProfileService;
     private UsersRepository usersRepository;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
     public JobSeekerProfileController(JobSeekerProfileService jobSeekerProfileService, UsersRepository usersRepository) {
@@ -65,10 +69,11 @@ public class JobSeekerProfileController {
 
     //  Edit job seeker profile
     @PostMapping
+    //  http://localhost:8080/job-seeker-profile
     public String editJobSeekerProfile(JobSeekerProfile jobSeekerProfile, @RequestParam("image") MultipartFile image,
-                                       @RequestParam("pdf") MultipartFile pdf, Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)){
+                                       @RequestParam("pdf") MultipartFile resume, Model model){
+        Authentication  authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             Users user = usersRepository.findByEmail(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             jobSeekerProfile.setUserId(user);
             jobSeekerProfile.setUserAccountId(user.getUserId());
@@ -76,27 +81,31 @@ public class JobSeekerProfileController {
         List<Skills> skillsList = new ArrayList<>();
         model.addAttribute("profile", jobSeekerProfile);
         model.addAttribute("skills", skillsList);
-        for(Skills skills : jobSeekerProfile.getSkills()) {
-            skills.setJobSeekerProfile(jobSeekerProfile);
+        for (Skills skill : jobSeekerProfile.getSkills()) {
+            skill.setJobSeekerProfile(jobSeekerProfile);
         }
         String imageName = "";
         String resumeName = "";
-        if(!Objects.equals(image.getOriginalFilename(), "")) {
+        //  Set image name inside jobSeekerProfile
+        if (!Objects.equals(image.getOriginalFilename(), "")) {
             imageName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
             jobSeekerProfile.setProfilePhoto(imageName);
         }
-        if(!Objects.equals(pdf.getOriginalFilename(), "")) {
-            resumeName = StringUtils.cleanPath(Objects.requireNonNull(pdf.getOriginalFilename()));
-            jobSeekerProfile.setResume(imageName);
+        //  Set resume name inside jobSeekerProfile
+        if (!Objects.equals(resume.getOriginalFilename(), "")) {
+            resumeName = StringUtils.cleanPath(Objects.requireNonNull(resume.getOriginalFilename()));
+            jobSeekerProfile.setResume(resumeName);
         }
         JobSeekerProfile seekerProfile = jobSeekerProfileService.addJobSeekerProfile(jobSeekerProfile);
         try {
+            // Save the image (PNG, JPEG) locally
             String uploadDir = "photos/candidate/" + jobSeekerProfile.getUserAccountId();
             if(!Objects.equals(image.getOriginalFilename(), "")){
                 FileUploadUtil.saveFile(uploadDir, imageName, image);
             }
-            if(!Objects.equals(pdf.getOriginalFilename(), "")){
-                FileUploadUtil.saveFile(uploadDir, resumeName, pdf);
+            // Save the resume (PDF file) locally
+            if(!Objects.equals(resume.getOriginalFilename(), "")){
+                FileUploadUtil.saveFile(uploadDir, resumeName, resume);
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -114,7 +123,7 @@ public class JobSeekerProfileController {
 
     //  Download resume
     @GetMapping("/downloadResume")
-    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userID") String userId) {
+    public ResponseEntity<?> downloadResume(@RequestParam(value = "fileName") String fileName, @RequestParam(value = "userId") String userId) {
         FileDownloadUtil downloadUtil = new FileDownloadUtil();
         Resource resource = null;
         try {

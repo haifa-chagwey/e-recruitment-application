@@ -20,8 +20,7 @@ public class Skills {
     @JoinColumn(name = "job_seeker_profile")
     private JobSeekerProfile jobSeekerProfile;
 
-    public Skills() {
-    }
+    public Skills() {}
 
     public Skills(Integer id, String name, String experienceLevel, String yearsOfExperience, JobSeekerProfile jobSeekerProfile) {
         this.id = id;

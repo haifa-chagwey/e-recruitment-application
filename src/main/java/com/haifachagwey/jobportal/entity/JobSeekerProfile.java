@@ -11,6 +11,7 @@ public class JobSeekerProfile {
     @Id
     private Integer userAccountId;
 
+    // This field does not exist inside the table
     @OneToOne
     @JoinColumn(name = "user_account_id")
     @MapsId
