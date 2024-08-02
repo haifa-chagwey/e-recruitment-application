@@ -1,1 +1,1 @@
-# job-portal-spring-boot
+# e-recruitment-application
